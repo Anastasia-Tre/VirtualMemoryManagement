@@ -2,5 +2,6 @@
 {
     internal interface IPageReplacementAlgorithm
     {
+        public PhysicalPage GetFreePhysicalPage();
     }
 }
