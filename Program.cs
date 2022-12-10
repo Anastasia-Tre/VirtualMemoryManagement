@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VirtualMemoryManagment
+namespace VirtualMemoryManagement
 {
     internal class Program
     {
