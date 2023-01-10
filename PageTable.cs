@@ -6,13 +6,9 @@ namespace VirtualMemoryManagement
     {
         public VirtualPage[] Pages;
 
-        public PageTable(int size)
+        public PageTable()
         {
-            Pages = new VirtualPage[size];
-            for (var i = 0; i < size; i++)
-            {
-                Pages[i] = new VirtualPage();
-            }
+            
         }
     }
 }

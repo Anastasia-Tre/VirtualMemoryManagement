@@ -4,36 +4,19 @@ namespace VirtualMemoryManagement
 {
     internal class Process
     {
-        public const int MaxProcessesNumber = 30;
+        public const int MaxProcessesNumber = 10;
+        public const int MaxWorkingTime = 20;
 
         public PageTable PageTable;
         public WorkingSet WorkingSet;
         public int WorkingTime;
 
-        private readonly int _maxWorkingTime;
-
-        private Kernel _kernel;
-
-        public Process(Kernel kernel)
+        public Process(WorkingSet workingSet)
         {
-            _maxWorkingTime = new Random().Next(5, 15);
-            PageTable = new PageTable(1); // size of page table?
-            _kernel = kernel;
+            WorkingTime = new Random().Next(MaxWorkingTime);
+            WorkingSet = workingSet;
+            PageTable = new PageTable(); 
         }
 
-        public void Read(VirtualPage virtualPage)
-        {
-            _kernel.ReadPage(virtualPage);
-        }
-
-        public void Write(VirtualPage virtualPage)
-        {
-            _kernel.WritePage(virtualPage);
-        }
-
-        public bool IsFinished()
-        {
-            return WorkingTime == _maxWorkingTime;
-        }
     }
 }

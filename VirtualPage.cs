@@ -2,6 +2,8 @@
 {
     internal class VirtualPage
     {
+        public const int MaxVirtualPagesNumber = 50;
+
         public int PresenceBit;
         public int ReferenceBit;
         public int ModificationBit;
