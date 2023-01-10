@@ -9,9 +9,11 @@ namespace VirtualMemoryManagement
     {
         private readonly IPageReplacementAlgorithm _pageReplacementAlgorithm;
         private readonly MMU MMU;
+
         private readonly List<PhysicalPage> _freePhysicalPages;
         private readonly List<PhysicalPage> _busyPhysicalPages;
         private readonly List<VirtualPage> _virtualPages;
+
         private int _time;
 
         public Kernel(IPageReplacementAlgorithm pageReplacementAlgorithm)
@@ -37,10 +39,12 @@ namespace VirtualMemoryManagement
 
         public Process GenerateProcess()
         {
-            var workingSetSize =
-                new Random().Next(VirtualPage.MaxVirtualPagesNumber);
-            var workingSet = new WorkingSet(workingSetSize).ChangeWorkingSet(_virtualPages);
-            var process = new Process(workingSet);
+            var pageTableSize = new Random().Next(VirtualPage.MaxVirtualPagesNumber);
+            var pageTable = new PageTable(pageTableSize);
+
+            var workingSetSize = new Random().Next(pageTableSize);
+            var workingSet = new WorkingSet(workingSetSize).ChangeWorkingSet(pageTable);
+            var process = new Process(pageTable, workingSet);
             return process;
         }
 
@@ -50,25 +54,16 @@ namespace VirtualMemoryManagement
             {
                 // changing workingSet of process
                 if (i == process.WorkingTime / 2)
-                    process.WorkingSet.ChangeWorkingSet(_virtualPages);
+                    process.WorkingSet.ChangeWorkingSet(process.PageTable);
 
-                ActionWithMemory(process.WorkingSet);
+                ActionWithMemory(process);
             }
             return true;
         }
 
-        private void ActionWithMemory(WorkingSet workingSet)
+        private void ActionWithMemory(Process process)
         {
-            // 90% звернень до сторінок з робочого набору, 10% звернень до будь-яких сторінок
-            var pageNum = new Random().Next(100);
-            VirtualPage page;
-            if (pageNum < 90)
-            {
-                page = workingSet.GetRandomVirtualPage();
-            } else
-            {
-                page = _virtualPages[new Random().Next(_virtualPages.Count)];
-            }
+            var page = process.GetVirtualPage();
 
             var action = new Random().Next(2);
             if (action == 1)
@@ -78,6 +73,25 @@ namespace VirtualMemoryManagement
             {
                 WritePage(page);
             }
+        }
+
+        public void ReadPage(VirtualPage virtualPage)
+        {
+            Console.WriteLine("Read Action");
+            var page = GetPhysicalPage(virtualPage);
+            MMU.SetReferenceBit(virtualPage);
+            _time++;
+            // smt do with page
+        }
+
+        public void WritePage(VirtualPage virtualPage)
+        {
+            Console.WriteLine("Write Action");
+            var page = GetPhysicalPage(virtualPage);
+            MMU.SetReferenceBit(virtualPage);
+            MMU.SetModificationBit(virtualPage);
+            _time++;
+            // smt do with page
         }
 
         private PhysicalPage GetPhysicalPage(VirtualPage virtualPage)
@@ -91,30 +105,15 @@ namespace VirtualMemoryManagement
             } catch (PageFaultException e)
             {
                 Console.WriteLine("PageFaultException");
-                page = _pageReplacementAlgorithm.GetFreePhysicalPage();
+                page = _pageReplacementAlgorithm.GetFreePhysicalPage(_freePhysicalPages);
+
+                _freePhysicalPages.Remove(page);
+                _busyPhysicalPages.Add(page);
+
+                MMU.MapVirtualAndPhysicalPages(virtualPage, page);
                 MMU.SetPresenceBit(virtualPage);
-                MMU.SetPhysicalPageNumber(virtualPage, page.Id);
             }
             return page;
-        }
-
-        public void ReadPage(VirtualPage virtualPage)
-        {
-            Console.WriteLine("Read Action");
-            //var page = GetPhysicalPage(virtualPage);
-            MMU.SetReferenceBit(virtualPage);
-            _time++;
-            // smt do with page
-        }
-
-        public void WritePage(VirtualPage virtualPage)
-        {
-            Console.WriteLine("Write Action");
-            //var page = GetPhysicalPage(virtualPage);
-            MMU.SetReferenceBit(virtualPage);
-            MMU.SetModificationBit(virtualPage);
-            _time++;
-            // smt do with page
         }
     }
 }

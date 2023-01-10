@@ -33,9 +33,10 @@ namespace VirtualMemoryManagement
             virtualPage.PhysicalPageNumber = pageNumber;
         }
 
-        public PhysicalPage MapVirtualPage(VirtualPage virtualPage)
+        public void MapVirtualAndPhysicalPages(VirtualPage virtualPage, PhysicalPage physicalPage)
         {
-            throw new NotImplementedException();
+            physicalPage.SetVirtualPage(virtualPage);
+            SetPhysicalPageNumber(virtualPage, physicalPage.Id);
         }
     }
 }

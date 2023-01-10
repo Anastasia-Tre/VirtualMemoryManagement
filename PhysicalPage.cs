@@ -20,5 +20,11 @@ namespace VirtualMemoryManagement
             VirtualPage = virtualPage;
             IsFree = false;
         }
+
+        public void SaveToFileSystem()
+        {
+            IsFree = true;
+            VirtualPage = null;
+        }
     }
 }

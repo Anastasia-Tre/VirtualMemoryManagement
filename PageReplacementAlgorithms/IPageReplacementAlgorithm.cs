@@ -1,7 +1,9 @@
-﻿namespace VirtualMemoryManagement.PageReplacementAlgorithms
+﻿using System.Collections.Generic;
+
+namespace VirtualMemoryManagement.PageReplacementAlgorithms
 {
     internal interface IPageReplacementAlgorithm
     {
-        public PhysicalPage GetFreePhysicalPage();
+        public PhysicalPage GetFreePhysicalPage(List<PhysicalPage> physicalPages);
     }
 }

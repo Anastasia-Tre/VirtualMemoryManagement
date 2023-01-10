@@ -14,7 +14,7 @@ namespace VirtualMemoryManagement
             _size = size;
         }
 
-        public WorkingSet ChangeWorkingSet(List<VirtualPage> allVirtualPages)
+        public WorkingSet ChangeWorkingSet(PageTable pageTable)
         {
             Pages = new VirtualPage[_size];
             for (var i = 0; i < _size; i++)
@@ -22,7 +22,7 @@ namespace VirtualMemoryManagement
                 VirtualPage page;
                 do
                 {
-                    page = allVirtualPages[new Random().Next(allVirtualPages.Count)];
+                    page = pageTable.Pages[new Random().Next(pageTable.Size)];
                 } while (Pages.Contains(page));
                 Pages[i] = page;
             }
