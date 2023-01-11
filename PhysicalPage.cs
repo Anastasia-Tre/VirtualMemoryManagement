@@ -1,6 +1,4 @@
-﻿
-
-namespace VirtualMemoryManagement
+﻿namespace VirtualMemoryManagement
 {
     internal class PhysicalPage
     {
@@ -24,6 +22,7 @@ namespace VirtualMemoryManagement
         public void SaveToFileSystem()
         {
             IsFree = true;
+            VirtualPage.New();
             VirtualPage = null;
         }
     }

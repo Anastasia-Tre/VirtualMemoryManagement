@@ -5,12 +5,27 @@ namespace VirtualMemoryManagement.PageReplacementAlgorithms
 {
     internal class RandomReplacementAlgorithm : IPageReplacementAlgorithm
     {
-        public PhysicalPage GetFreePhysicalPage(List<PhysicalPage> physicalPages)
+        public PhysicalPage GetFreePhysicalPage(List<PhysicalPage> freePhysicalPages, List<PhysicalPage> busyPhysicalPages)
         {
-            return physicalPages[new Random().Next(physicalPages.Count)];
-        }
+            PhysicalPage page;
+            if (freePhysicalPages.Count != 0)
+            {
+                page = freePhysicalPages[new Random().Next(freePhysicalPages.Count)];
+            }
+            else
+            {
+                page = busyPhysicalPages[new Random().Next(busyPhysicalPages.Count)];
+                if (page.VirtualPage.ModificationBit != 0)
+                {
+                    page.SaveToFileSystem();
+                    Console.WriteLine($"Save physical page {page.Id} to file system");
+                }
 
-        // add if no free page: save page to file system
-        // print algorithm decision
+                Console.WriteLine($"Release physical page {page.Id}");
+            }
+
+            Console.WriteLine($"Decision of algorithm: use physical page {page.Id}");
+            return page;
+        }
     }
 }

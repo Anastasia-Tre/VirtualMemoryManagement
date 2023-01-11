@@ -21,6 +21,7 @@ namespace VirtualMemoryManagement
         public void SetReferenceBit(VirtualPage virtualPage)
         {
             virtualPage.ReferenceBit++;
+            SetLastUsedTime(virtualPage);
         }
 
         public void SetModificationBit(VirtualPage virtualPage)
@@ -31,6 +32,11 @@ namespace VirtualMemoryManagement
         public void SetPhysicalPageNumber(VirtualPage virtualPage, int pageNumber)
         {
             virtualPage.PhysicalPageNumber = pageNumber;
+        }
+
+        public void SetLastUsedTime(VirtualPage virtualPage)
+        {
+            virtualPage.LastUsedTime = Kernel.Time;
         }
 
         public void MapVirtualAndPhysicalPages(VirtualPage virtualPage, PhysicalPage physicalPage)

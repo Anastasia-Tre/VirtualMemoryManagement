@@ -9,11 +9,14 @@
         public int ModificationBit;
         public int? PhysicalPageNumber = null;
 
+        public int LastUsedTime;
+
         public VirtualPage()
         {
             PresenceBit = 0;
             ReferenceBit = 0;
             ModificationBit = 0;
+            LastUsedTime = Kernel.Time;
         }
 
         public VirtualPage New()
@@ -22,6 +25,7 @@
             ReferenceBit = 0;
             ModificationBit = 0;
             PhysicalPageNumber = null;
+            LastUsedTime = Kernel.Time;
             return this;
         }
 
@@ -30,7 +34,8 @@
             return $"P:{PresenceBit} " + 
                    $"R:{ReferenceBit} " + 
                    $"M:{ModificationBit} " + 
-                   $"PPN:{PhysicalPageNumber}";
+                   $"PPN:{PhysicalPageNumber} " +
+                   $"LastUsedTime:{LastUsedTime}";
         }
     }
 }

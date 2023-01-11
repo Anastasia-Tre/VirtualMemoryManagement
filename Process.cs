@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 
 namespace VirtualMemoryManagement
 {
@@ -14,7 +13,7 @@ namespace VirtualMemoryManagement
 
         public Process(PageTable pageTable, WorkingSet workingSet)
         {
-            WorkingTime = new Random().Next(MaxWorkingTime);
+            WorkingTime = new Random().Next(5, MaxWorkingTime);
             WorkingSet = workingSet;
             PageTable = pageTable;
         }

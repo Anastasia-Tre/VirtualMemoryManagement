@@ -14,7 +14,7 @@ namespace VirtualMemoryManagement
         private readonly List<PhysicalPage> _busyPhysicalPages;
         private readonly List<VirtualPage> _virtualPages;
 
-        private int _time;
+        public static int Time;
 
         public Kernel(IPageReplacementAlgorithm pageReplacementAlgorithm)
         {
@@ -39,10 +39,10 @@ namespace VirtualMemoryManagement
 
         public Process GenerateProcess()
         {
-            var pageTableSize = new Random().Next(VirtualPage.MaxVirtualPagesNumber);
+            var pageTableSize = new Random().Next(5,VirtualPage.MaxVirtualPagesNumber);
             var pageTable = new PageTable(pageTableSize).FillPageTable(_virtualPages);
 
-            var workingSetSize = new Random().Next(pageTableSize);
+            var workingSetSize = new Random().Next(1, pageTableSize);
             var workingSet = new WorkingSet(workingSetSize).ChangeWorkingSet(pageTable);
             
             return new Process(pageTable, workingSet);
@@ -83,9 +83,8 @@ namespace VirtualMemoryManagement
             Console.WriteLine($"Virtual page attributes before action - {virtualPage}");
             var page = GetPhysicalPage(virtualPage);
             MMU.SetReferenceBit(virtualPage);
-            _time++;
             Console.WriteLine($"Virtual page attributes after action - {virtualPage}\n");
-            // smt do with page
+            Time++;
         }
 
         public void WritePage(VirtualPage virtualPage)
@@ -95,9 +94,8 @@ namespace VirtualMemoryManagement
             var page = GetPhysicalPage(virtualPage);
             MMU.SetReferenceBit(virtualPage);
             MMU.SetModificationBit(virtualPage);
-            _time++;
             Console.WriteLine($"Virtual page attributes after action - {virtualPage}\n");
-            // smt do with page
+            Time++;
         }
 
         private PhysicalPage GetPhysicalPage(VirtualPage virtualPage)
@@ -111,7 +109,7 @@ namespace VirtualMemoryManagement
             } catch (PageFaultException e)
             {
                 Console.WriteLine("PageFaultException");
-                page = _pageReplacementAlgorithm.GetFreePhysicalPage(_freePhysicalPages);
+                page = _pageReplacementAlgorithm.GetFreePhysicalPage(_freePhysicalPages, _busyPhysicalPages);
 
                 _freePhysicalPages.Remove(page);
                 if (!_busyPhysicalPages.Contains(page))
