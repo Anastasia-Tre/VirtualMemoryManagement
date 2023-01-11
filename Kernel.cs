@@ -20,6 +20,7 @@ namespace VirtualMemoryManagement
         {
             _pageReplacementAlgorithm = pageReplacementAlgorithm;
             MMU = new MMU();
+            Time = 0;
 
             Console.WriteLine($"Create {PhysicalPage.MaxPhysicalPagesNumber} physical pages");
             _freePhysicalPages = new List<PhysicalPage>();
@@ -81,8 +82,8 @@ namespace VirtualMemoryManagement
         {
             Console.WriteLine("Read Action");
             Console.WriteLine($"Virtual page attributes before action - {virtualPage}");
-            var page = GetPhysicalPage(virtualPage);
             MMU.SetReferenceBit(virtualPage);
+            var page = GetPhysicalPage(virtualPage);
             Console.WriteLine($"Virtual page attributes after action - {virtualPage}\n");
             Time++;
         }
@@ -91,9 +92,9 @@ namespace VirtualMemoryManagement
         {
             Console.WriteLine("Write Action");
             Console.WriteLine($"Virtual page attributes before action - {virtualPage}");
-            var page = GetPhysicalPage(virtualPage);
             MMU.SetReferenceBit(virtualPage);
             MMU.SetModificationBit(virtualPage);
+            var page = GetPhysicalPage(virtualPage);
             Console.WriteLine($"Virtual page attributes after action - {virtualPage}\n");
             Time++;
         }

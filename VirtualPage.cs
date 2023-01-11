@@ -25,7 +25,7 @@
             ReferenceBit = 0;
             ModificationBit = 0;
             PhysicalPageNumber = null;
-            LastUsedTime = Kernel.Time;
+            //LastUsedTime = Kernel.Time;
             return this;
         }
 

@@ -21,7 +21,7 @@ namespace VirtualMemoryManagement
         public void SetReferenceBit(VirtualPage virtualPage)
         {
             virtualPage.ReferenceBit++;
-            SetLastUsedTime(virtualPage);
+            //SetLastUsedTime(virtualPage);
         }
 
         public void SetModificationBit(VirtualPage virtualPage)

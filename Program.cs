@@ -11,7 +11,7 @@ namespace VirtualMemoryManagement
             TestAlgorithm(new RandomReplacementAlgorithm());
 
             Console.WriteLine("\nWSClockAlgorithm\n");
-            //TestAlgorithm(new WSClockAlgorithm());
+            TestAlgorithm(new WSClockAlgorithm());
         }
 
         static void TestAlgorithm(IPageReplacementAlgorithm algorithm)
