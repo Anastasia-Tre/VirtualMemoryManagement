@@ -27,5 +27,10 @@ namespace VirtualMemoryManagement.PageReplacementAlgorithms
             Console.WriteLine($"Decision of algorithm: use physical page {page.Id}");
             return page;
         }
+
+        public override string ToString()
+        {
+            return "RandomReplacementAlgorithm";
+        }
     }
 }

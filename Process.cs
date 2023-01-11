@@ -4,8 +4,8 @@ namespace VirtualMemoryManagement
 {
     internal class Process
     {
-        public const int MaxProcessesNumber = 10;
-        public const int MaxWorkingTime = 20;
+        public const int MaxProcessesNumber = 7;
+        public const int MaxWorkingTime = 10;
 
         public PageTable PageTable;
         public WorkingSet WorkingSet;

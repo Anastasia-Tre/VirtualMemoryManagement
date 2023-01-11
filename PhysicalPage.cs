@@ -2,7 +2,7 @@
 {
     internal class PhysicalPage
     {
-        public const int MaxPhysicalPagesNumber = 30;
+        public const int MaxPhysicalPagesNumber = 10;
 
         public int Id;
         public bool IsFree = true;
