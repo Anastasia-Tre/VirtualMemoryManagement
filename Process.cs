@@ -11,6 +11,8 @@ namespace VirtualMemoryManagement
         public WorkingSet WorkingSet;
         public int WorkingTime;
 
+        public int PageFaultCount;
+
         public Process(PageTable pageTable, WorkingSet workingSet)
         {
             WorkingTime = new Random().Next(5, MaxWorkingTime);
@@ -20,7 +22,7 @@ namespace VirtualMemoryManagement
 
         public VirtualPage GetVirtualPage()
         {
-            // 90% звернень до сторінок з робочого набору, 10% звернень до будь-яких сторінок
+            // 90% pages from WorkingSet, 10% - others
             var pageNum = new Random().Next(100);
             VirtualPage page;
             if (pageNum < 90)

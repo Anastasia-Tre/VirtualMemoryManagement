@@ -15,6 +15,7 @@ namespace VirtualMemoryManagement
         private readonly List<VirtualPage> _virtualPages;
 
         public static int Time;
+        public int PageFaultCount;
 
         public Kernel(IPageReplacementAlgorithm pageReplacementAlgorithm)
         {
@@ -59,47 +60,37 @@ namespace VirtualMemoryManagement
                     process.WorkingSet.ChangeWorkingSet(process.PageTable);
                 }
 
-                ActionWithMemory(process);
+                var page = process.GetVirtualPage();
+
+                var action = new Random().Next(2);
+                if (action == 1) ReadPage(page, process);
+                else WritePage(page, process);
             }
             return true;
         }
 
-        private void ActionWithMemory(Process process)
-        {
-            var page = process.GetVirtualPage();
-
-            var action = new Random().Next(2);
-            if (action == 1)
-            {
-                ReadPage(page);
-            } else
-            {
-                WritePage(page);
-            }
-        }
-
-        public void ReadPage(VirtualPage virtualPage)
+        public void ReadPage(VirtualPage virtualPage, Process process)
         {
             Console.WriteLine("Read Action");
             Console.WriteLine($"Virtual page attributes before action - {virtualPage}");
             MMU.SetReferenceBit(virtualPage);
-            var page = GetPhysicalPage(virtualPage);
+            var page = GetPhysicalPage(virtualPage, process);
             Console.WriteLine($"Virtual page attributes after action - {virtualPage}\n");
             Time++;
         }
 
-        public void WritePage(VirtualPage virtualPage)
+        public void WritePage(VirtualPage virtualPage, Process process)
         {
             Console.WriteLine("Write Action");
             Console.WriteLine($"Virtual page attributes before action - {virtualPage}");
             MMU.SetReferenceBit(virtualPage);
             MMU.SetModificationBit(virtualPage);
-            var page = GetPhysicalPage(virtualPage);
+            var page = GetPhysicalPage(virtualPage, process);
             Console.WriteLine($"Virtual page attributes after action - {virtualPage}\n");
             Time++;
         }
 
-        private PhysicalPage GetPhysicalPage(VirtualPage virtualPage)
+        private PhysicalPage GetPhysicalPage(VirtualPage virtualPage, Process process)
         {
             PhysicalPage page;
             try
@@ -110,6 +101,8 @@ namespace VirtualMemoryManagement
             } catch (PageFaultException e)
             {
                 Console.WriteLine("PageFaultException");
+                PageFaultCount++;
+                process.PageFaultCount++;
                 page = _pageReplacementAlgorithm.GetFreePhysicalPage(_freePhysicalPages, _busyPhysicalPages);
 
                 _freePhysicalPages.Remove(page);

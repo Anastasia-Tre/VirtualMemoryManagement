@@ -25,8 +25,11 @@ namespace VirtualMemoryManagement
                 var process = kernel.GenerateProcess();
                 Console.WriteLine($"Start the process {i + 1} with characteristics - {process}");
                 kernel.StartProcess(process);
-                Console.WriteLine($"Finish the process {i + 1}\n");
+                Console.WriteLine($"Finish the process {i + 1}");
+                Console.WriteLine($"Total number of page faults for process = {process.PageFaultCount}\n");
             }
+
+            Console.WriteLine($"Total number of page faults = {kernel.PageFaultCount}\n");
         }
     }
 }
