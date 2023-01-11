@@ -37,8 +37,6 @@ namespace VirtualMemoryManagement
                     Console.WriteLine($"{process.WorkingSet.Pages.Length} - {process.PageFaultCount}");
                 }
             }
-
-
         }
 
         static void TestAlgorithm(IPageReplacementAlgorithm algorithm, int processesNumber)
