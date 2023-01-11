@@ -34,5 +34,11 @@ namespace VirtualMemoryManagement
             return page;
         }
 
+        public override string ToString()
+        {
+            return $"Working time: {WorkingTime} " +
+                   $"Size of page table: {PageTable.Pages.Length} " +
+                   $"Size of working set: {WorkingSet.Pages.Length}";
+        }
     }
 }

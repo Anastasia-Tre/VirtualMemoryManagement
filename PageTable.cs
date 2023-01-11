@@ -1,6 +1,9 @@
 ﻿
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Xml;
 
 namespace VirtualMemoryManagement
 {
@@ -12,6 +15,22 @@ namespace VirtualMemoryManagement
         public PageTable(int size)
         {
             Size = size;
+        }
+
+        public PageTable FillPageTable(List<VirtualPage> virtualPages)
+        {
+            Pages = new VirtualPage[Size];
+            for (var i = 0; i < Size; i++)
+            {
+                VirtualPage page;
+                do
+                {
+                    page = virtualPages[new Random().Next(Size)];
+                } while (Pages.Contains(page));
+                Pages[i] = page.New();
+            }
+
+            return this;
         }
 
         public VirtualPage GetRandomVirtualPage()

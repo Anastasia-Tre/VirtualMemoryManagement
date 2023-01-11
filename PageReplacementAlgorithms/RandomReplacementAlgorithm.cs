@@ -11,5 +11,6 @@ namespace VirtualMemoryManagement.PageReplacementAlgorithms
         }
 
         // add if no free page: save page to file system
+        // print algorithm decision
     }
 }

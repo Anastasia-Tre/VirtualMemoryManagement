@@ -40,21 +40,23 @@ namespace VirtualMemoryManagement
         public Process GenerateProcess()
         {
             var pageTableSize = new Random().Next(VirtualPage.MaxVirtualPagesNumber);
-            var pageTable = new PageTable(pageTableSize);
+            var pageTable = new PageTable(pageTableSize).FillPageTable(_virtualPages);
 
             var workingSetSize = new Random().Next(pageTableSize);
             var workingSet = new WorkingSet(workingSetSize).ChangeWorkingSet(pageTable);
-            var process = new Process(pageTable, workingSet);
-            return process;
+            
+            return new Process(pageTable, workingSet);
         }
 
         public bool StartProcess(Process process)
         {
             for (var i = 0; i < process.WorkingTime; i++)
             {
-                // changing workingSet of process
                 if (i == process.WorkingTime / 2)
+                {
+                    Console.WriteLine($"Change working set of process\n");
                     process.WorkingSet.ChangeWorkingSet(process.PageTable);
+                }
 
                 ActionWithMemory(process);
             }
@@ -78,19 +80,23 @@ namespace VirtualMemoryManagement
         public void ReadPage(VirtualPage virtualPage)
         {
             Console.WriteLine("Read Action");
+            Console.WriteLine($"Virtual page attributes before action - {virtualPage}");
             var page = GetPhysicalPage(virtualPage);
             MMU.SetReferenceBit(virtualPage);
             _time++;
+            Console.WriteLine($"Virtual page attributes after action - {virtualPage}\n");
             // smt do with page
         }
 
         public void WritePage(VirtualPage virtualPage)
         {
             Console.WriteLine("Write Action");
+            Console.WriteLine($"Virtual page attributes before action - {virtualPage}");
             var page = GetPhysicalPage(virtualPage);
             MMU.SetReferenceBit(virtualPage);
             MMU.SetModificationBit(virtualPage);
             _time++;
+            Console.WriteLine($"Virtual page attributes after action - {virtualPage}\n");
             // smt do with page
         }
 
@@ -108,7 +114,8 @@ namespace VirtualMemoryManagement
                 page = _pageReplacementAlgorithm.GetFreePhysicalPage(_freePhysicalPages);
 
                 _freePhysicalPages.Remove(page);
-                _busyPhysicalPages.Add(page);
+                if (!_busyPhysicalPages.Contains(page))
+                    _busyPhysicalPages.Add(page);
 
                 MMU.MapVirtualAndPhysicalPages(virtualPage, page);
                 MMU.SetPresenceBit(virtualPage);

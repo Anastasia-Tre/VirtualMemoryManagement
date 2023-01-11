@@ -17,7 +17,7 @@ namespace VirtualMemoryManagement
             for (var i = 0; i < processesNumber; i++)
             {
                 var process =  kernel.GenerateProcess();
-                Console.WriteLine($"Start the process {i + 1}");
+                Console.WriteLine($"Start the process {i + 1} with characteristics {process}");
                 kernel.StartProcess(process);
                 Console.WriteLine($"Finish the process {i + 1}\n");
             }
